@@ -8,6 +8,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
 import { AreaChartComponent } from './area-chart/area-chart.component';
 import { ColumnChartComponent } from './column-chart/column-chart.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
   ],
   imports: [
     BrowserModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

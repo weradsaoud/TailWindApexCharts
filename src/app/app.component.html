@@ -99,50 +99,94 @@
         </span>
         <input type="search" name="q"
           class="text-right py-2 text-sm text-white rounded-full pr-10 focus:outline-none focus:bg-white focus:text-gray-900 focus:border-brand-dark-blue focus:border-2"
-          placeholder="...بحث" autocomplete="off">
+          placeholder="...بحث" autocomplete="off" [(ngModel)]="searchString">
       </div>
     </div>
 
-    <div class="flex justify-center text-white font-normal">
-      <ul class="text-right mx-auto">
-        <li class="">
-          <button title="unkown"
-            class="text-base flex justify-center w-full mx-0 px-2 py-3 hover:rounded-l-full rounded-lg"
-            [ngClass]="btnClasses" (click)="onBtnClick()" (focusout)="onFocusOut($event)" (mouseenter)="onMouseEnter()"
-            (mouseleave)="onMouseLeave()">
-            <span class="w-5 mr-1 text-xs text-center my-auto rounded-full hover:text-orange-500"
-              [ngClass]="spanClasses">25</span>
-            تحقيقات موظفي الهيئة
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              viewBox="0 0 24 24" class="w-6 h-6">
-              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-          </button>
-          <div class="">
-            <ul class="pr-8">
-              <li class="">
-                <p class="text-sm mt-2">تحقيقات موظفي الهيئة </p>
-              </li>
-              <li class="">
-                <p class="text-sm mt-2">تحقيقات موظفي الهيئة </p>
-              </li>
-              <li class="">
-                <p class="text-sm mt-2">تحقيقات موظفي الهيئة </p>
-              </li>
-            </ul>
+    <div class="flex justify-center text-white font-normal h-[calc(100vh-190px)] overflow-scroll">
+
+      <ul class="text-right mx-auto" *ngIf="sideBarList.length>0;else null">
+        <li *ngFor="let sideBarItem of sideBarList">
+          <div *ngIf="sideBarItem.searchText.toLowerCase().includes(searchString.toLowerCase())||(searchString ==='')">
+            <div class="text-right flex justify-end">
+              <p>{{sideBarItem.name}}</p>
+              <svg (click)="plusClicked([sideBarItem.id])" *ngIf="sideBarItem.children.length>0;else null"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                class="w-4 h-4 self-center hover:text-orange-500 hover:cursor-pointer">
+                <path fill-rule="evenodd"
+                  d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+                  clip-rule="evenodd" />
+              </svg>
+              <!-- <svg ((click)="plusClicked([sideBarItem.id])") *ngIf="(sideBarItem.children.length>0)&&(sideBarItem.collapse);else null"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+              class="w-4 h-4 hover:text-orange-500 hover:cursor-pointer">
+              <path fill-rule="evenodd"
+                d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
+                clip-rule="evenodd" />
+            </svg> -->
+            </div>
+            <div class="pr-8 mb-4 border-r-2 border-dashed border-r-black"
+              *ngIf="(sideBarItem.children)&&(sideBarItem.children.length>0);else null">
+              <ul class="">
+                <li class="" *ngFor="let secondLevelItem of sideBarItem.children">
+                  <div *ngIf="secondLevelItem.searchText.toLowerCase().includes(searchString.toLowerCase())||(searchString ==='')">
+                    <div class="text-right flex justify-end">
+                      <p class="text-sm mt-2">{{ secondLevelItem.name }}</p>
+                      <svg *ngIf="(secondLevelItem.children.length>0);else null" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="currentColor"
+                        class="w-4 h-4 self-center hover:text-orange-500 hover:cursor-pointer">
+                        <path fill-rule="evenodd"
+                          d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+                          clip-rule="evenodd" />
+                      </svg>
+                      <!-- <svg *ngIf="(secondLevelItem.children.length>0)&&(secondLevelItem.collapse);else null"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                    class="w-4 h-4 hover:text-orange-500 hover:cursor-pointer">
+                    <path fill-rule="evenodd"
+                      d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
+                      clip-rule="evenodd" />
+                  </svg> -->
+                    </div>
+                    <div class="pr-8 mb-4 border-r-2 border-dashed border-r-black"
+                      *ngIf="(secondLevelItem.children)&&(secondLevelItem.children.length>0);else null">
+                      <ul class="">
+                        <li *ngFor="let thirdLevelItem of secondLevelItem.children">
+                          <div *ngIf="thirdLevelItem.searchText.toLowerCase().includes(searchString.toLowerCase())||(searchString ==='')">
+                            <div class="text-right flex justify-end">
+                              <p>{{thirdLevelItem.name}}</p>
+                              <svg *ngIf="thirdLevelItem.children.length>0;else null" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24" fill="currentColor"
+                                class="w-4 h-4 self-center hover:text-orange-500 hover:cursor-pointer">
+                                <path fill-rule="evenodd"
+                                  d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+                                  clip-rule="evenodd" />
+                              </svg>
+                              <!-- <svg *ngIf="(thirdLevelItem.children.length>0)&&(thirdLevelItem.collapse);else null"
+                          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                          class="w-4 h-4 hover:text-orange-500 hover:cursor-pointer">
+                          <path fill-rule="evenodd"
+                            d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
+                            clip-rule="evenodd" />
+                        </svg> -->
+                            </div>
+                            <div class="pr-8 mb-4 border-r-2 border-dashed border-r-black"
+                              *ngIf="(thirdLevelItem.children)&&(thirdLevelItem.children.length>0);else null">
+                              <ul>
+                                <li *ngFor="let fourthLevelItem of thirdLevelItem.children">
+                                  <p *ngIf="fourthLevelItem.searchText.toLocaleLowerCase().includes(searchString.toLowerCase())||(searchString ==='')">
+                                    {{fourthLevelItem.name}}</p>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
-        </li>
-        <li class="mt-4">
-          <button title="unkown"
-            class="text-base flex justify-center w-full mx-0 px-2 py-3 rounded-l-full rounded-r-lg bg-orange-300 hover:bg-inherit"
-            [ngClass]="btnnClasses" (click)="onBtnnClick()" (focusout)="onnFocusOut()">
-            <span class="w-5 mr-1 text-xs text-center my-auto rounded-full text-orange-500 bg-white">25</span>
-            تحقيقات المخلصين الجمركيين
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              viewBox="0 0 24 24" class="w-6 h-6">
-              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-          </button>
         </li>
       </ul>
     </div>
